@@ -5,8 +5,8 @@ from cli import get_cli_from_chan_catalog
 app = Flask(__name__)
 
 @app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+def index():
+    return "You should call /<board>/<page> to get the catalog of a board.\n"
 
 @app.route("/<string:name>")
 @app.route("/<string:name>/<int:page>")

@@ -18,6 +18,8 @@ class ChanClient:
         Get the catalog of a supported SFW board.
         :param board: The board to get the catalog of (e.g. "po" for Papercraft & Origami).
         """
+        if not board:
+            raise ValueError("Board cannot be empty.")
         if board not in SFW_4CHAN_BOARDS:
             raise ValueError(f"Board {board} is not a supported SFW board.")
         
