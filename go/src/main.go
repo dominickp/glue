@@ -9,6 +9,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// https://techwasti.com/cors-handling-in-go-gin-framework
+func corsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "*")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
+}
+
 // validateCurlRequestMiddleware is a middleware that checks if the request is made using curl.
 // If the request is not made using curl, it returns a HTML response with an error message.
 func validateCurlRequestMiddleware() gin.HandlerFunc {
@@ -33,6 +49,7 @@ func validateCurlRequestMiddleware() gin.HandlerFunc {
 
 func main() {
 	r := gin.Default()
+	r.Use(corsMiddleware())
 	r.Use(validateCurlRequestMiddleware())
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "You should call /<board>/<page> to get the catalog of a board.\n")

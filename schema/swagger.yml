@@ -1,0 +1,95 @@
+openapi: 3.1.0
+info:
+  version: "1.0.0"
+  title: Glue
+  description: >
+    A sample API that returns a CLI response showing the active discussion threads in some SFW 4channel 
+    boards using the [4chan-API](https://github.com/4chan/4chan-API)
+  contact:
+    name: Dominick Peluso
+  license:
+    name: MIT
+  licenseUrl: http://opensource.org/licenses/MIT
+
+
+servers:
+  - url: http://localhost:8001
+    description: Python implementation
+  - url: http://localhost:8002
+    description: Golang implementation
+
+paths:
+
+  /:
+    get:
+      summary: Get index
+      description: Returns the index message
+      produces:
+        - text/plain
+        - text/html
+      parameters: 
+        - name: user-agent
+          in: header
+          description: The user-agent to use (must start with 'curl')
+          required: true
+          type: string
+          pattern: ^curl
+          example: curl/7.68.0
+      responses:
+        200:
+          description: Index response
+          schema:
+            type: string
+            example: You should call /<board>/<page> to get the catalog of a board.
+
+  /{board}/{page}:
+    get:
+      summary: Get a list of recent threads
+      description: Returns a list of recent threads on a particular board and page.
+      produces:
+        - text/plain
+        - text/html
+      parameters:
+        - name: user-agent
+          in: header
+          description: The user-agent to use (must start with 'curl')
+          required: true
+          type: string
+          pattern: ^curl
+          example: curl/7.68.0
+        - name: board
+          in: path
+          description: The supported SFW 4channel boards to get the catalog response from.
+          required: true
+          type: string
+          enum: [po, g, fa, mu, v]
+          default: po
+        - name: page
+          in: path
+          description: The page number of the catalog.
+          required: false
+          default: 1
+          type: integer
+          format: int32  
+      responses:
+        200:
+          description: CLI response showing the thread titles and their reply counts.
+          schema:
+            type: string
+            example: |
+              Page 2
+              - PAPER PLANES REFUELED (142)
+              - I&#039;m making an effigy of a McDonald&#039;s nightmare golem (96)
+              - Low Poly Toucan Papercraft (3)
+              - Is there a term for this type of 3D models? I love this one, I&#... (8)
+              - The Changs are at it again (25)
+              - Paper Cutting General -1 (6)
+              - What kind of paper plane is this? (14)
+              - The lack of a good /po/+/ck/ thread is absurd...<br><br>So here ... (4)
+              - Simple Origami ideas for Potential Soul Mate (24)
+              - Engagement Proposal Origami (4)
+              - Making some paper stars. (2)
+              - RPG/Wargame Terrain Papercrafts? (3)
+              - Chamoo323&#039;s Archives (16)
+              - Paperboots (3)
+              - I need a noa magazine 202 but i dont have a diyzhan invite, can ... (171)
