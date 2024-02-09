@@ -9,9 +9,17 @@ services:
   live-python:
     build: ./python
     command: flask --app main run --debug --host=0.0.0.0
-    ports:
-      - "8001:5000"
-    volumes:
-      - ./python/src:/app
+    ports: [8001:5000]
+    volumes: [./python/src:/app]
+    environment:
+      <<: *mock-shared-vars
+
+  live-go:
+    build: 
+      context: ./go
+      target: dev
+    command: ["CompileDaemon", "-directory=/app/", "-polling", "-build=go build -a -tags netgo -o ./service", "-command=/app/service"]
+    ports: [8002:8080]
+    volumes: [./go/src:/app]
     environment:
       <<: *mock-shared-vars
