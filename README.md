@@ -5,14 +5,14 @@ This is a trivial app implemented in multiple languages. This service returns a 
 ## Purpose
 Most of the code I've worked on for the past 7 years is not visible to a prospective employer.
 
-The purpose of this repo is to demonstrate my:
-- coding ability in multiple languages
-- ability to containerize applications
-- ability to structure development containers to develop "on-container"
-- ability to integrate with APIs
-- ability to write integration tests and mock dependencies
-- ability to document a project
-- ability to use CICD and deploy this app somewhere
+The purpose of this repo is to demonstrate my ability to:
+- write readable code in multiple languages
+- containerize applications
+- structure development containers to develop "on-container"
+- integrate with third-party APIs
+- write integration tests and mock out dependencies
+- document a project
+- use CICD and deploy this app somewhere
 
 ## Local example
 
