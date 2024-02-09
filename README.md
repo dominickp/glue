@@ -12,7 +12,7 @@ The purpose of this repo is to demonstrate my ability to:
 - integrate with third-party APIs
 - write integration tests and mock out dependencies
 - build load/performance tests
-- document a project
+- document a project and an API
 - use CICD and deploy this app somewhere
 
 ## Local example
