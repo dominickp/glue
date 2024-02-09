@@ -6,8 +6,14 @@ app = Flask(__name__)
 
 @app.before_request
 def before_request():
+    """
+    Check if the request is from curl. If not, return an HTML message to the user.
+    """
     if "curl" not in request.headers.get("User-Agent", ""):
-        return f"This API returns text-based responses intended to be used with curl. Try \"curl {request.url}\".", 400
+        return f"""<div>
+            <p>This API returns text-based responses intended to be used with curl.</p>
+            <p>Try \"curl {request.url}\".</p>
+        </div>""", 400
     pass
 
 @app.route("/")
