@@ -2,6 +2,12 @@
 def get_cli_from_chan_catalog(catalog, page=1):
     """
     Get a CLI representation of a chan catalog.
+    E.g.:
+        Page 1
+        - Welcome to /po/! (2)
+        - No Stencil thread? What has happened to /po/ ? (1)
+        - Bookbinding (36)
+        ...
     :param catalog: The catalog to get the CLI representation of.
     """
     cli_output = f"Page {page}: \n"

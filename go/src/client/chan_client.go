@@ -36,7 +36,7 @@ func init() {
 
 // GetCatalog retrieves the catalog of a supported SFW board.
 // The 'board' parameter specifies the board to get the catalog of (e.g., "po" for Papercraft & Origami).
-func GetCatalog(board string) (interface{}, error) {
+func GetCatalog(board string) ([]CatalogPage, error) {
 
 	// Check if the board is in the sfwSupportedBoardsArray
 	isSupported := false
@@ -47,7 +47,7 @@ func GetCatalog(board string) (interface{}, error) {
 		}
 	}
 	if !isSupported {
-		return "", errors.New("Board not supported.")
+		return nil, errors.New("Board not supported.")
 	}
 
 	// Call the 4channel API to get the catalog
@@ -56,7 +56,7 @@ func GetCatalog(board string) (interface{}, error) {
 		SetResult(&catalogResponse).
 		Get(host + "/" + board + "/catalog.json")
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	return catalogResponse, nil

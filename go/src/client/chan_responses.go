@@ -1,5 +1,7 @@
 package client
 
+// Example: https://a.4cdn.org/po/catalog.json
+
 type CatalogPageThread struct {
 	Sub     string `json:"sub"`
 	Com     string `json:"com"`

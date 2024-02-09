@@ -38,7 +38,7 @@ func main() {
 		c.String(http.StatusOK, "You should call /<board>/<page> to get the catalog of a board.\n")
 	})
 	r.GET("/:name", handler.HandleCatalog)
-	r.GET("/:name/:page?", handler.HandleCatalog)
+	r.GET("/:name/:page", handler.HandleCatalog)
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",

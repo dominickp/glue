@@ -23,6 +23,7 @@ class ChanClient:
         if board not in SFW_4CHAN_BOARDS:
             raise ValueError(f"Board {board} is not a supported SFW board.")
         
+        # Example: https://a.4cdn.org/po/catalog.json
         url = furl(CHAN_HOST).add(path=[board, "catalog.json"]).url
 
         chan_r = requests.get(url, timeout=REQUEST_TIMEOUT)
