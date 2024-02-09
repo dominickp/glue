@@ -1,14 +1,14 @@
 # glue
 
-This is a trivial app implemented in multiple languages. This service returns a CLI response showing the active discussion threads in some SFW 4channel boards.
+This is a trivial app implemented in multiple languages. This service returns a CLI response showing the active discussion threads in some SFW 4channel boards using the [4chan-API](https://github.com/4chan/4chan-API). 
 
 ## Purpose
 Most of the code I've worked on for the past 7 years is not visible to a prospective employer.
 
 The purpose of this repo is to demonstrate my ability to:
-- write readable code in multiple languages
-- containerize applications
-- structure development containers to develop "on-container"
+- write readable code and create services in multiple languages
+- containerize applications using best practices
+- provide development containers to facilitate developing "on-container"
 - integrate with third-party APIs
 - write integration tests and mock out dependencies
 - build load/performance tests
