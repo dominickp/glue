@@ -11,6 +11,7 @@ The purpose of this repo is to demonstrate my ability to:
 - structure development containers to develop "on-container"
 - integrate with third-party APIs
 - write integration tests and mock out dependencies
+- build load/performance tests
 - document a project
 - use CICD and deploy this app somewhere
 
