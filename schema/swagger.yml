@@ -17,6 +17,8 @@ servers:
     description: Python implementation
   - url: http://localhost:8002
     description: Golang implementation
+  - url: http://localhost:8003
+    description: Javascript implementation
 
 paths:
 

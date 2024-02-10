@@ -23,6 +23,15 @@ services:
     volumes: [./go/src:/app]
     environment:
       <<: *mock-shared-vars
+    
+  live-javascript:
+    build: ./javascript
+    command: nodemon --legacy-watch src/index.js
+    init: true
+    ports: [8003:3000]
+    volumes: [./javascript/src:/app/src]
+    environment:
+      <<: *mock-shared-vars
 
   swagger-ui:
     image: swaggerapi/swagger-ui
