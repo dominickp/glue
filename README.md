@@ -3,7 +3,13 @@
 This is a trivial app implemented in multiple languages. This service returns a CLI response showing the active discussion threads in some SFW 4channel boards using the [4chan-API](https://github.com/4chan/4chan-API). 
 
 ## Purpose
-Most of the code I've worked on for the past 7 years is not visible to a prospective employer.
+This is a very simple application that could just exist as a curl/jq one-liner:
+```sh
+curl -s https://a.4cdn.org/po/catalog.json | \
+jq -r '.[] | select(.page == 1) | .threads[] | " - " + (if .sub == null then .com[:64] else .sub end) + " (\(.replies))"'
+```
+
+But what this application does is not the point. Most of the code I've worked on for the past 7 years is not visible to a prospective employer.
 
 The purpose of this repo is to demonstrate my ability to:
 - write readable code and create services in multiple languages
