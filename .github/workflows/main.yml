@@ -38,8 +38,8 @@ jobs:
       with:
         context: ./go
         push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+        tags: ${{ steps.meta-go.outputs.tags }}
+        labels: ${{ steps.meta-go.outputs.labels }}
     # - name: Build the go Docker image
     #   run: |
     #     docker build ./go --file go/Dockerfile --tag glue-go:$(date +%s)
