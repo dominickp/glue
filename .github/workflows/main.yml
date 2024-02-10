@@ -11,50 +11,57 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-
   build-and-push-image:
-
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
       packages: write
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
     - name: Log in to the Container registry
       uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Extract metadata (tags, labels) for Docker
+    # Go image
+    - name: Extract metadata (tags, labels) for Docker (go)
       id: meta-go
       uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-go
-
-    - name: Build and push Docker image
+    - name: Build and push Docker image (go)
       uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
       with:
         context: ./go
         push: true
         tags: ${{ steps.meta-go.outputs.tags }}
         labels: ${{ steps.meta-go.outputs.labels }}
-    # - name: Build the go Docker image
-    #   run: |
-    #     docker build ./go --file go/Dockerfile --tag glue-go:$(date +%s)
-    #     docker push ghcr.io/dominickp/store:latest
+    # Python image
+    - name: Extract metadata (tags, labels) for Docker (py)
+      id: meta-py
+      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-py
+    - name: Build and push Docker image (py)
+      uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+      with:
+        context: ./py
+        push: true
+        tags: ${{ steps.meta-py.outputs.tags }}
+        labels: ${{ steps.meta-py.outputs.labels }}
+    # Javascript image
+    - name: Extract metadata (tags, labels) for Docker (js)
+      id: meta-js
+      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-js
+    - name: Build and push Docker image (js)
+      uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+      with:
+        context: ./js
+        push: true
+        tags: ${{ steps.meta-js.outputs.tags }}
+        labels: ${{ steps.meta-js.outputs.labels }}
 
-    # - name: Build the python Docker image
-    #   run: |
-    #     docker build ./python --file python/Dockerfile --tag glue-python:$(date +%s)
-    #     docker push ghcr.io/dominickp/store:latest
-
-    # - name: Build the javascript Docker image
-    #   run: |
-    #     docker build ./javascript --file go/Dockerfile --tag glue-javascript:$(date +%s)
-    #     docker push ghcr.io/dominickp/store:latest
