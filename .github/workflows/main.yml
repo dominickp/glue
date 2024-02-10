@@ -26,18 +26,31 @@ jobs:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-  
-    - name: Build the go Docker image
-      run: |
-        docker build ./go --file go/Dockerfile --tag glue-go:$(date +%s)
-        docker push ghcr.io/dominickp/store:latest
+        
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta-go
+      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-go
 
-    - name: Build the python Docker image
-      run: |
-        docker build ./python --file python/Dockerfile --tag glue-python:$(date +%s)
-        docker push ghcr.io/dominickp/store:latest
+    - name: Build and push Docker image
+      uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+      with:
+        context: ./go
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+    # - name: Build the go Docker image
+    #   run: |
+    #     docker build ./go --file go/Dockerfile --tag glue-go:$(date +%s)
+    #     docker push ghcr.io/dominickp/store:latest
 
-    - name: Build the javascript Docker image
-      run: |
-        docker build ./javascript --file go/Dockerfile --tag glue-javascript:$(date +%s)
-        docker push ghcr.io/dominickp/store:latest
+    # - name: Build the python Docker image
+    #   run: |
+    #     docker build ./python --file python/Dockerfile --tag glue-python:$(date +%s)
+    #     docker push ghcr.io/dominickp/store:latest
+
+    # - name: Build the javascript Docker image
+    #   run: |
+    #     docker build ./javascript --file go/Dockerfile --tag glue-javascript:$(date +%s)
+    #     docker push ghcr.io/dominickp/store:latest
