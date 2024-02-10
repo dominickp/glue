@@ -25,13 +25,15 @@ The purpose of this repo is to demonstrate my ability to:
 
 ```sh
 # Start the container(s) locally
-docker-compose up --build live-python   # python
-docker-compose up --build live-go       # go
+docker-compose up --build live-python       # python
+docker-compose up --build live-go           # go
+docker-compose up --build live-javascript   # javascript
 ```
 ```sh
 # View page 2 of Papercraft & Origami (/po/)
-curl http://localhost:8001/po/2         # python
-curl http://localhost:8002/po/2         # go
+curl http://localhost:8001/po/2             # python
+curl http://localhost:8002/po/2             # go
+curl http://localhost:8003/po/2             # javascript
 ```
 #### Example output: 
 ```txt
