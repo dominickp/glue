@@ -29,15 +29,15 @@ jobs:
   
     - name: Build the go Docker image
       run: |
-        docker build . --file go/Dockerfile --tag glue-go:$(date +%s)
+        docker build ./go --file go/Dockerfile --tag glue-go:$(date +%s)
         docker push ghcr.io/dominickp/store:latest
 
     - name: Build the python Docker image
       run: |
-        docker build . --file python/Dockerfile --tag glue-python:$(date +%s)
+        docker build ./python --file python/Dockerfile --tag glue-python:$(date +%s)
         docker push ghcr.io/dominickp/store:latest
 
     - name: Build the javascript Docker image
       run: |
-        docker build . --file go/Dockerfile --tag glue-javascript:$(date +%s)
+        docker build ./javascript --file go/Dockerfile --tag glue-javascript:$(date +%s)
         docker push ghcr.io/dominickp/store:latest
