@@ -47,7 +47,7 @@ jobs:
     - name: Build and push Docker image (py)
       uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
       with:
-        context: ./py
+        context: ./python
         push: true
         tags: ${{ steps.meta-py.outputs.tags }}
         labels: ${{ steps.meta-py.outputs.labels }}
@@ -60,7 +60,7 @@ jobs:
     - name: Build and push Docker image (js)
       uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
       with:
-        context: ./js
+        context: ./javascript
         push: true
         tags: ${{ steps.meta-js.outputs.tags }}
         labels: ${{ steps.meta-js.outputs.labels }}
