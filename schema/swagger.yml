@@ -24,7 +24,7 @@ paths:
 
   /:
     get:
-      summary: Get index
+      summary: Get index message
       description: Returns the index message
       produces:
         - text/plain
@@ -40,9 +40,13 @@ paths:
       responses:
         200:
           description: Index response
-          schema:
-            type: string
-            example: You should call /<board>/<page> to get the catalog of a board.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: You should call /<board>/<page> to get the catalog of a board.
+        400:
+          $ref: '#/components/responses/BadRequest'
 
   /{board}/{page}:
     get:
@@ -76,22 +80,42 @@ paths:
       responses:
         200:
           description: CLI response showing the thread titles and their reply counts.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: |
+                  Page 2
+                  - PAPER PLANES REFUELED (142)
+                  - I&#039;m making an effigy of a McDonald&#039;s nightmare golem (96)
+                  - Low Poly Toucan Papercraft (3)
+                  - Is there a term for this type of 3D models? I love this one, I&#... (8)
+                  - The Changs are at it again (25)
+                  - Paper Cutting General -1 (6)
+                  - What kind of paper plane is this? (14)
+                  - The lack of a good /po/+/ck/ thread is absurd...<br><br>So here ... (4)
+                  - Simple Origami ideas for Potential Soul Mate (24)
+                  - Engagement Proposal Origami (4)
+                  - Making some paper stars. (2)
+                  - RPG/Wargame Terrain Papercrafts? (3)
+                  - Chamoo323&#039;s Archives (16)
+                  - Paperboots (3)
+                  - I need a noa magazine 202 but i dont have a diyzhan invite, can ... (171)
+          400:
+            $ref: '#/components/responses/BadRequest'
+
+components:
+  responses:
+    BadRequest:
+      description: Bad request not from curl.
+      content:
+        text/html:
           schema:
             type: string
             example: |
-              Page 2
-              - PAPER PLANES REFUELED (142)
-              - I&#039;m making an effigy of a McDonald&#039;s nightmare golem (96)
-              - Low Poly Toucan Papercraft (3)
-              - Is there a term for this type of 3D models? I love this one, I&#... (8)
-              - The Changs are at it again (25)
-              - Paper Cutting General -1 (6)
-              - What kind of paper plane is this? (14)
-              - The lack of a good /po/+/ck/ thread is absurd...<br><br>So here ... (4)
-              - Simple Origami ideas for Potential Soul Mate (24)
-              - Engagement Proposal Origami (4)
-              - Making some paper stars. (2)
-              - RPG/Wargame Terrain Papercrafts? (3)
-              - Chamoo323&#039;s Archives (16)
-              - Paperboots (3)
-              - I need a noa magazine 202 but i dont have a diyzhan invite, can ... (171)
+              <html>
+                  <div>
+                      <p>This API returns text-based responses intended to be used with curl.</p>
+                      <p>Try "curl %s".</p>
+                  </div>
+              </html>
