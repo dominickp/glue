@@ -3,6 +3,7 @@ package client
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/go-resty/resty/v2"
@@ -48,7 +49,7 @@ func GetCatalog(board string, headers map[string]string) ([]CatalogPage, error) 
 		}
 	}
 	if !isSupported {
-		return nil, errors.New("Board not supported.")
+		return nil, errors.New(fmt.Sprintf("Board %s is not a supported SFW board.", board))
 	}
 
 	// Call the 4channel API to get the catalog

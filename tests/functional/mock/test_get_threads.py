@@ -20,13 +20,14 @@ def test_get_threads_browser(host):
 def test_get_threads_curl_page_1(host):
     """
     Request the page 1 of /po/ as a user with curl. This page is mocked out to return 4 threads, each with the subject
-    present.
+    present. We'll also request both "/po/1" and "/po" to ensure the default page is 1.
     """
-    url = f"{host}/po/1"
-    response = requests.get(url, headers={"User-Agent": "curl/7.79.1"}, timeout=REQUEST_TIMEOUT)
-    assert response.status_code == 200
-    assert response.headers["Content-Type"] == "text/plain; charset=utf-8"
-    assert response.text == \
+    urls = [f"{host}/po/1", f"{host}/po"]
+    for url in urls:
+        response = requests.get(url, headers={"User-Agent": "curl/7.79.1"}, timeout=REQUEST_TIMEOUT)
+        assert response.status_code == 200
+        assert response.headers["Content-Type"] == "text/plain; charset=utf-8"
+        assert response.text == \
 """Page 1: 
  - Subject 1 (10 replies)
  - Subject 2 (10 replies)
@@ -67,3 +68,19 @@ def test_get_threads_curl_page_3(host):
  - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque... (10 replies)
  - Vestibulum faucibus semper lacus a sagittis. Suspendisse egestas... (10 replies)
 """
+
+# add test to confirm /po/1 as the same as /po
+
+@pytest.mark.parametrize("host", GLUE_IMPLEMENTATIONS)
+def test_get_threads_curl_page_4(host):
+    """
+    Request NSFW boards and ensure that the application returns the right error message and status code.
+    """
+    NSFW_BOARDS = frozenset(["b", "r", "pol", "s", "gif"])
+
+    for board in NSFW_BOARDS:
+        url = f"{host}/{board}/1"
+        response = requests.get(url, headers={"User-Agent": "curl/7.79.1"}, timeout=REQUEST_TIMEOUT)
+        assert response.status_code == 400
+        assert response.headers["Content-Type"] == "text/plain; charset=utf-8"
+        assert response.text == f"Board {board} is not a supported SFW board."

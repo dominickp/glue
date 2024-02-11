@@ -3,6 +3,13 @@ const DEFAULT_CHAN_HOST = "https://a.4cdn.org";
 const CHAN_HOST = process.env.CHAN_HOST || DEFAULT_CHAN_HOST;
 const SFW_4CHAN_BOARDS = ["po", "g", "fa", "mu", "v"];
 
+class BadRequestError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "BadRequestError";
+  }
+}
+
 class ChanClient {
   constructor(host = CHAN_HOST) {
     this.host = host;
@@ -16,10 +23,10 @@ class ChanClient {
    */
   async getCatalog(board, headers = {}) {
     if (!board) {
-      throw new Error("Board is required.");
+      throw new BadRequestError("Board is required.");
     }
     if (!SFW_4CHAN_BOARDS.includes(board)) {
-      throw new Error(`Board ${board} is not a supported SFW board.`);
+      throw new BadRequestError(`Board ${board} is not a supported SFW board.`);
     }
     const url = `${this.host}/${board}/catalog.json`;
     const response = await fetch(url, {

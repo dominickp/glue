@@ -52,9 +52,12 @@ app.get("/:board/:page?", async (req, res) => {
     };
     const catalog = await client.getCatalog(board, fanoutHeaders);
     const cliResponse = cli.getCLIFromCatalog(catalog, page);
-    res.send(cliResponse);
+    return res.send(cliResponse);
   } catch (error) {
-    res.status(500).send(error.message);
+    if (error.name === "BadRequestError") {
+      return res.status(400).send(error.message);
+    }
+    return res.status(500).send(error.message);
   }
 });
 

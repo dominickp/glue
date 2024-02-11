@@ -51,6 +51,10 @@ func HandleCatalog(c *gin.Context) {
 
 	catalog, err := client.GetCatalog(name, headers)
 	if err != nil {
+		if err.Error() == fmt.Sprintf("Board %s is not a supported SFW board.", name) {
+			c.String(http.StatusBadRequest, err.Error())
+			return
+		}
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}

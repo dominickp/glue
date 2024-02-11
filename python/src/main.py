@@ -35,7 +35,14 @@ def list_threads(name, page=1):
     chan = ChanClient()
     # Forward along the x-forwarded-for header so the 4channel API knows the original IP of the user
     headers = {"x-forwarded-for": request.headers.get("x-forwarded-for", request.remote_addr)}
-    catalog = chan.get_catalog(name, headers)
-    response = Response(get_cli_from_chan_catalog(catalog, page))
+    try:
+        catalog = chan.get_catalog(name, headers)
+        response = Response(get_cli_from_chan_catalog(catalog, page))
+    except ValueError as e:
+        response = Response(str(e))
+        response.status_code = 400
+    except Exception as e:
+        response = Response(str(e))
+        response.status_code = 500
     response.mimetype = "text/plain"
     return response
