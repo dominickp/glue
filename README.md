@@ -21,6 +21,14 @@ The purpose of this repo is to demonstrate my ability to:
 - document a project and an API
 - use CICD and deploy this app somewhere
 
+## Todo
+ - Improve logging, code quality
+ - Prometheus metrics and grafana dashboard
+ - Functional tests, Mocks
+ - Unit tests
+ - Performance tests
+ - API monitoring
+
 ## Hosted example
 
 ```sh
