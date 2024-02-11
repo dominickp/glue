@@ -1,23 +1,48 @@
 # glue
 
-This is a trivial app implemented in multiple languages. This service returns a CLI response showing the active discussion threads in some SFW 4channel boards using the [4chan-API](https://github.com/4chan/4chan-API). 
+This is a trivial app implemented in multiple languages. This service returns a plaintext response showing the active threads in some 4channel discussion boards using [their read-only API](https://github.com/4chan/4chan-API). 
 
-## Purpose
-This is a very simple application that could just exist as a curl/jq one-liner:
 ```sh
-curl -s https://a.4cdn.org/po/catalog.json | \
-jq -r '.[] | select(.page == 1) | .threads[] | " - " + (if .sub == null then .com[:64] else .sub end) + " (\(.replies))"'
+# Summarize page 5 of Papercraft & Origami (/po/)
+curl https://glue-go.dominick.cc/po/5
+```
+```txt
+Page 5: 
+ - several pieces. (1 replies)
+ - Cybermodels Quake Marine (5 replies)
+ - pepakura wisdom (6 replies)
+ - Lucky Stars (52 replies)
+ - Son of the mask paper craft (4 replies)
+ - dirk eisner&#039;s di-excavated octahedron (2 replies)
+ - solicitud libro origami pdf, Origami Land- por Tomoko Fuse (202 replies)
+ - I&#039;m making a paper gauntlet. My grandmother threw out the o... (16 replies)
+ - Please share (34 replies)
+ - Hi, I&#039;m looking for this papercraft: (12 replies)
+ - Anybody got the files for this Onihime? (4 replies)
+ - Printable Origami Paper Patterns (67 replies)
+ - hehe, le funny mustache man (20 replies)
+ - Looking for for Paper Robots: 25 Fantastic Robots You Can Build ... (2 replies)
+ - help with model &amp; general FF bread ig (9 replies)
 ```
 
-But what this application does is not the point. Most of the code I've worked on for the past 7 years is not visible to a prospective employer.
+## Purpose
+This is a very simple application that could just exist as a [jq](https://jqlang.github.io/jq/) one-liner. For example:
+```sh
+# Summarize page 5 of Papercraft & Origami (/po/)
+curl -s https://a.4cdn.org/po/catalog.json | \
+jq -r '.[] | select(.page == 5) | .threads[] |
+  " - " + (if .sub == null then .com[:64] else .sub end) +
+  " (\(.replies))"'
+```
 
-The purpose of this repo is to demonstrate my ability to:
+But what this application actually does is not the really point. Most of the code I've worked on for the past 7 years is not visible to a prospective employer. The purpose of this repo is to demonstrate my ability to:
 - write readable code and create services in multiple languages
 - containerize applications using best practices
 - provide development containers to facilitate developing "on-container"
 - integrate with third-party APIs
 - write integration tests and mock out dependencies
 - build load/performance tests
+- implement metrics and API monitoring
 - document a project and an API
 - use CICD and deploy this app somewhere
 
