@@ -19,6 +19,13 @@ servers:
     description: Golang implementation
   - url: http://localhost:8003
     description: Javascript implementation
+  - url: http://localhost:8011
+    description: Python implementation (mocked)
+  - url: http://localhost:8012
+    description: Golang implementation (mocked)
+  - url: http://localhost:8013
+    description: Javascript implementation (mocked)
+
 
 paths:
 
