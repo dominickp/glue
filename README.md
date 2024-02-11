@@ -25,6 +25,14 @@ Page 5:
  - help with model &amp; general FF bread ig (9 replies)
 ```
 
+## Table of contents <!-- omit in toc -->
+- [glue](#glue)
+  - [Purpose](#purpose)
+  - [Todo](#todo)
+  - [Deployment](#deployment)
+  - [Local example](#local-example)
+
+
 ## Purpose
 This is a very simple application that could just exist as a [jq](https://jqlang.github.io/jq/) one-liner. For example:
 ```sh
@@ -54,7 +62,7 @@ But what this application actually does is not the really point. Most of the cod
  - API monitoring
  - Improve this readme and document what is happening here so people don't need to dig into the code to understand
 
-## Hosted example
+## Deployment
 I have an instance of each implementation deployed to my Oracle Cloud Infrastructure (OCI) tenancy. 
 
 ```sh
