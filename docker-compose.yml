@@ -122,3 +122,15 @@ services:
     command: ptw --poll -- -vv ./mock
     environment:
       GLUE_IMPLEMENTATIONS_CSV: "http://mocked-python,http://mocked-go,http://mocked-javascript"
+
+  live-functional-test:
+    build: ./tests/functional
+    volumes: [./tests/functional:/tests]
+    depends_on:
+      live-python: {condition: service_healthy}
+      live-go: {condition: service_healthy}
+      live-javascript: {condition: service_healthy}
+    init: true
+    command: ptw --poll -- -vv ./live
+    environment:
+      GLUE_IMPLEMENTATIONS_CSV: "http://live-python,http://live-go,http://live-javascript"
