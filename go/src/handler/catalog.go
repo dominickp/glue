@@ -18,7 +18,7 @@ import (
 //	- Bookbinding (36)
 //	...
 func getCLIOutputFromCatalog(catalog []client.CatalogPage, page int) string {
-	cli_response := "Page " + strconv.Itoa(page) + "\n"
+	cli_response := "Page " + strconv.Itoa(page) + ": \n"
 	for _, thread := range catalog[page-1].Threads {
 		subject := thread.Sub
 		if subject == "" {
@@ -28,7 +28,7 @@ func getCLIOutputFromCatalog(catalog []client.CatalogPage, page int) string {
 			subject = fmt.Sprintf("%.64s...", subject)
 		}
 		replies := strconv.Itoa(thread.Replies)
-		cli_response += " - " + subject + " (" + replies + ") \n"
+		cli_response += " - " + subject + " (" + replies + " replies)\n"
 	}
 	return cli_response
 }

@@ -16,7 +16,7 @@ function getCLIFromCatalog(catalog, pageNumber = 1) {
   for (const thread of page.threads) {
     let subject = thread.sub || thread.com || "No subject";
     subject = subject.length > 64 ? `${subject.substring(0, 64)}...` : subject;
-    cliResponse += ` - ${subject} (${thread.replies})\n`;
+    cliResponse += ` - ${subject} (${thread.replies} replies)\n`;
   }
   return cliResponse;
 }

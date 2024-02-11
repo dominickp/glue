@@ -34,4 +34,6 @@ def index():
 def list_threads(name, page=1):
     chan = ChanClient()
     catalog = chan.get_catalog(name)
-    return get_cli_from_chan_catalog(catalog, page)
+    response = Response(get_cli_from_chan_catalog(catalog, page))
+    response.mimetype = "text/plain"
+    return response
