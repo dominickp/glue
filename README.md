@@ -49,10 +49,10 @@ But what this application actually does is not the really point. Most of the cod
 ## Todo
  - Improve logging, code quality
  - Prometheus metrics and grafana dashboard
- - Functional tests, Mocks
  - Unit tests
  - Performance tests
  - API monitoring
+ - Improve this readme and document what is happening here so people don't need to dig into the code to understand
 
 ## Hosted example
 
