@@ -55,12 +55,19 @@ But what this application actually does is not the really point. Most of the cod
  - Improve this readme and document what is happening here so people don't need to dig into the code to understand
 
 ## Hosted example
+I have an instance of each implementation deployed to my Oracle Cloud Infrastructure (OCI) tenancy. 
 
 ```sh
 curl https://glue-go.dominick.cc/g      # go
 curl https://glue-py.dominick.cc/po/2   # python
 curl https://glue-js.dominick.cc/mu     # javascript
 ```
+
+For those curious, this repo using GitHub Actions to publish [packages](https://github.com/dominickp?tab=packages&repo_name=glue) (the docker images of the applications) to GitHub Container Registry (GHCR) with tag `main` (named after the branch). I'm deploying containers in OCI with [Portainer](https://www.portainer.io/) which pulls prebuilt images from GHCR. I also have a [Watchtower](https://containrrr.dev/watchtower/) container which scans for updates the images in GHCR at the `main` tag, and if detected, will automatically pull and re-deploy the containers. 
+
+<img src="./docs/img/glue-deployment.drawio.png">
+
+Another alternative would be to have GitHub Actions deploy to Portainer directly, which would give me a much more normal CICD pipeline. I didn't do this because currently my Portainer instance is only accessible via my [Tailscale](https://tailscale.com/) network and I'd have to expose it to the Internet to allow GitHub Actions access it. But I'm sure I could whitelist GitHub to access it with network policies.
 
 ## Local example
 
