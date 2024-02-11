@@ -7,8 +7,10 @@ WORKDIR /app
 COPY ./requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
+# Install curl for healthchecks
+RUN apt update && apt install -y curl
+
 # Copy the source code
 COPY ./src /app
 
-CMD flask --app main run --host=0.0.0.0
-
+CMD flask --app main run --host=0.0.0.0 --port=80

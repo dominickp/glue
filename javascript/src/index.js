@@ -2,7 +2,7 @@ const express = require("express");
 const chan = require("./chan_client");
 const cli = require("./cli");
 const app = express();
-const port = 3000;
+const port = 80;
 
 /**
  * Middleware to handle CORS.

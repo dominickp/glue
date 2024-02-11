@@ -2,25 +2,35 @@ version: "3.8"
 
 
 x-mock-shared-vars: &mock-shared-vars
-  CHAN_HOST: http://mock-4channel:3000
+  CHAN_HOST: http://mock-4channel:80
 
 x-live-shared-vars: &live-shared-vars
   CHAN_HOST: https://a.4cdn.org
+
+x-shared-curl-heathcheck: &shared-curl-heathcheck
+  test: ["CMD", "curl", "-f", "http://localhost:80/"]
+  interval: 10s
+  timeout: 5s
+  retries: 3
 
 services:
 
   live-python:
     build: ./python
-    command: flask --app main run --debug --host=0.0.0.0
-    ports: [8001:5000]
+    healthcheck:
+      <<: *shared-curl-heathcheck
+    command: flask --app main run --debug --host=0.0.0.0 --port=80
+    ports: [8001:80]
     volumes: [./python/src:/app]
     environment:
       <<: *live-shared-vars
 
   mocked-python:
     build: ./python
-    command: flask --app main run --debug --host=0.0.0.0
-    ports: [8011:5000]
+    healthcheck:
+      <<: *shared-curl-heathcheck
+    command: flask --app main run --debug --host=0.0.0.0 --port=80
+    ports: [8011:80]
     volumes: [./python/src:/app]
     depends_on: [mock-4channel]
     environment:
@@ -30,8 +40,10 @@ services:
     build: 
       context: ./go
       target: dev
+    healthcheck:
+      <<: *shared-curl-heathcheck
     command: ["CompileDaemon", "-directory=/app/", "-polling", "-build=go build -a -tags netgo -o ./service", "-command=/app/service"]
-    ports: [8002:8080]
+    ports: [8002:80]
     volumes: [./go/src:/app]
     environment:
       <<: *live-shared-vars
@@ -40,8 +52,10 @@ services:
     build: 
       context: ./go
       target: dev
+    healthcheck:
+      <<: *shared-curl-heathcheck
     command: ["CompileDaemon", "-directory=/app/", "-polling", "-build=go build -a -tags netgo -o ./service", "-command=/app/service"]
-    ports: [8012:8080]
+    ports: [8012:80]
     volumes: [./go/src:/app]
     depends_on: [mock-4channel]
     environment:
@@ -49,18 +63,22 @@ services:
 
   live-javascript:
     build: ./javascript
+    healthcheck:
+      <<: *shared-curl-heathcheck
     command: nodemon --legacy-watch src/index.js
     init: true
-    ports: [8003:3000]
+    ports: [8003:80]
     volumes: [./javascript/src:/app/src]
     environment:
       <<: *live-shared-vars
 
   mocked-javascript:
     build: ./javascript
+    healthcheck:
+      <<: *shared-curl-heathcheck
     command: nodemon --legacy-watch src/index.js
     init: true
-    ports: [8013:3000]
+    ports: [8013:80]
     volumes: [./javascript/src:/app/src]
     depends_on: [mock-4channel]
     environment:
@@ -68,8 +86,10 @@ services:
 
   mock-4channel:
     build: ./mocks/mock-4channel
+    healthcheck:
+      <<: *shared-curl-heathcheck
     volumes: [./mocks/mock-4channel:/app]
-    ports: [8051:3000]
+    ports: [8051:80]
     command: nodemon --legacy-watch src/index.js
 
   swagger-ui:
@@ -95,10 +115,10 @@ services:
     build: ./tests/functional
     volumes: [./tests/functional:/tests]
     depends_on:
-      - mocked-python
-      - mocked-go
-      - mocked-javascript
+      mocked-python: {condition: service_healthy}
+      mocked-go: {condition: service_healthy}
+      mocked-javascript: {condition: service_healthy}
     init: true
-    command: ptw --poll -- ./mock
+    command: ptw --poll -- -vv ./mock
     environment:
-      GLUE_IMPLEMENTATIONS_CSV: "http://mocked-python:5000,http://mocked-go:8080,http://mocked-javascript:3000"
+      GLUE_IMPLEMENTATIONS_CSV: "http://mocked-python,http://mocked-go,http://mocked-javascript"

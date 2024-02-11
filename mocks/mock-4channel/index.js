@@ -1,9 +1,13 @@
 const express = require("express");
 const fs = require("fs");
 const app = express();
-const port = 3000;
+const port = 80;
 
 const jsonFilePath = "/app/json";
+
+app.get("/", (req, res) => {
+  res.send("Welcome to mock-4channel.");
+});
 
 app.get("/:board/:file", (req, res) => {
   const board = req.params.board;
