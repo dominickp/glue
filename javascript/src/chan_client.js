@@ -4,7 +4,7 @@ const CHAN_HOST = process.env.CHAN_HOST || DEFAULT_CHAN_HOST;
 const SFW_4CHAN_BOARDS = ["po", "g", "fa", "mu", "v"];
 
 class ChanClient {
-  constructor(host = DEFAULT_CHAN_HOST) {
+  constructor(host = CHAN_HOST) {
     this.host = host;
   }
 
