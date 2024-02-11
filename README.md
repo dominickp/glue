@@ -21,6 +21,14 @@ The purpose of this repo is to demonstrate my ability to:
 - document a project and an API
 - use CICD and deploy this app somewhere
 
+## Hosted example
+
+```sh
+curl https://glue-go.dominick.cc/g      # go
+curl https://glue-py.dominick.cc/po/2   # python
+curl https://glue-js.dominick.cc/mu     # javascript
+```
+
 ## Local example
 
 ```sh
