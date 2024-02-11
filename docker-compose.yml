@@ -100,3 +100,5 @@ services:
       - mocked-javascript
     init: true
     command: ptw --poll -- ./mock
+    environment:
+      GLUE_IMPLEMENTATIONS_CSV: "http://mocked-python:5000,http://mocked-go:8080,http://mocked-javascript:3000"

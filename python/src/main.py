@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 from flask_cors import CORS
 from chan_client import ChanClient
 from cli import get_cli_from_chan_catalog
@@ -25,7 +25,9 @@ def before_request():
 
 @app.route("/")
 def index():
-    return "You should call /<board>/<page> to get the catalog of a board.\n"
+    response = Response("You should call /<board>/<page> to get the catalog of a board.\n")
+    response.mimetype = "text/plain"
+    return response
 
 @app.route("/<string:name>")
 @app.route("/<string:name>/<int:page>")
