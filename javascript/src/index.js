@@ -5,6 +5,18 @@ const app = express();
 const port = 80;
 
 /**
+ * Middleware to print access log
+ */
+app.use((req, res, next) => {
+  console.log(
+    `${req.ip} - - [${new Date().toUTCString()}] "${req.method} ${
+      req.originalUrl
+    } HTTP/${req.httpVersion}" ${res.statusCode}`
+  );
+  next();
+});
+
+/**
  * Middleware to handle CORS.
  */
 app.use((req, res, next) => {
