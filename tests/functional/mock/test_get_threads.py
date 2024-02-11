@@ -82,3 +82,25 @@ def test_get_threads_curl_page_4(host):
         assert response.status_code == 400
         assert response.headers["Content-Type"] == "text/plain; charset=utf-8"
         assert response.text == f"Board {board} is not a supported SFW board."
+
+@pytest.mark.parametrize("host", GLUE_IMPLEMENTATIONS)
+def test_get_threads_negative_404(host):
+    """
+    Signal to the 4channel mock to return a 404 on the get catalog fanout.
+    """
+    url = f"{host}/po/1"
+    headers = {"x-forwarded-for": "4c-mock-status-code=404", "User-Agent": "curl/7.79.1"}
+    response = requests.get(url, headers=headers, timeout=REQUEST_TIMEOUT)
+    assert response.status_code == 500
+    assert response.headers["Content-Type"] == "text/plain; charset=utf-8"
+
+@pytest.mark.parametrize("host", GLUE_IMPLEMENTATIONS)
+def test_get_threads_negative_timeout(host):
+    """
+    Signal to the 4channel mock to delay it's response by 10 seconds, which should cause a timeout (after 5 seconds).
+    """
+    url = f"{host}/po/1"
+    headers = {"x-forwarded-for": "4c-mock-delay=10", "User-Agent": "curl/7.79.1"}
+    response = requests.get(url, headers=headers, timeout=REQUEST_TIMEOUT)
+    assert response.status_code == 500
+    assert response.headers["Content-Type"] == "text/plain; charset=utf-8" 

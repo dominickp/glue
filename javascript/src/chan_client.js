@@ -31,7 +31,7 @@ class ChanClient {
     const url = `${this.host}/${board}/catalog.json`;
     const response = await fetch(url, {
       method: "GET",
-      timeout: REQUEST_TIMEOUT,
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT * 1000),
       headers: headers,
     });
     if (!response.ok) {

@@ -45,9 +45,11 @@ func HandleCatalog(c *gin.Context) {
 	}
 
 	// Forward along the x-forwarded-for header so the 4channel API knows the original IP of the user
-	headers := map[string]string{
-		"x-forwarded-for": c.ClientIP(),
+	xff := c.GetHeader("x-forwarded-for")
+	if xff == "" {
+		xff = c.ClientIP()
 	}
+	headers := map[string]string{"x-forwarded-for": xff}
 
 	catalog, err := client.GetCatalog(name, headers)
 	if err != nil {

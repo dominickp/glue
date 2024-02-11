@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -32,7 +33,8 @@ func init() {
 	host = getEnvString("CHAN_HOST", defaultChanHost)
 	restyClient = resty.New().
 		SetJSONMarshaler(json.Marshal).
-		SetJSONUnmarshaler(json.Unmarshal)
+		SetJSONUnmarshaler(json.Unmarshal).
+		SetTimeout(time.Duration(5) * time.Second) // Set timeout to 5 seconds
 }
 
 // GetCatalog retrieves the catalog of a supported SFW board.
@@ -54,12 +56,15 @@ func GetCatalog(board string, headers map[string]string) ([]CatalogPage, error) 
 
 	// Call the 4channel API to get the catalog
 	catalogResponse := []CatalogPage{}
-	_, err := restyClient.R().
+	response, err := restyClient.R().
 		SetHeaders(headers).
 		SetResult(&catalogResponse).
 		Get(host + "/" + board + "/catalog.json")
 	if err != nil {
 		return nil, err
+	}
+	if response.IsError() {
+		return nil, errors.New(fmt.Sprintf("Error: %s", response.String()))
 	}
 
 	return catalogResponse, nil
