@@ -85,10 +85,10 @@ services:
       <<: *mock-shared-vars
 
   mock-4channel:
-    build: ./mocks/mock-4channel
+    build: ./docker/mock-4channel
     healthcheck:
       <<: *shared-curl-heathcheck
-    volumes: [./mocks/mock-4channel:/app]
+    volumes: [./docker/mock-4channel:/app]
     ports: [8051:80]
     command: nodemon --legacy-watch src/index.js
 
