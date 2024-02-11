@@ -1,4 +1,4 @@
-# glue
+# glue <!-- omit in toc -->
 
 This is a trivial app implemented in multiple languages. This service returns a plaintext response showing the active threads in some 4channel discussion boards using [their read-only API](https://github.com/4chan/4chan-API). 
 
@@ -26,11 +26,10 @@ Page 5:
 ```
 
 ## Table of contents <!-- omit in toc -->
-- [glue](#glue)
-  - [Purpose](#purpose)
-  - [Todo](#todo)
-  - [Deployment](#deployment)
-  - [Local example](#local-example)
+- [Purpose](#purpose)
+- [Todo](#todo)
+- [Deployment](#deployment)
+- [Local example](#local-example)
 
 
 ## Purpose
