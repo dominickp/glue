@@ -46,7 +46,11 @@ app.get("/:board/:page?", async (req, res) => {
   const page = req.params.page || 1;
   const client = new chan.ChanClient();
   try {
-    const catalog = await client.getCatalog(board);
+    // Forward along the x-forwarded-for header so the 4channel API knows the original IP of the user
+    const fanoutHeaders = {
+      "X-Forwarded-For": req.headers["x-forwarded-for"] || req.ip,
+    };
+    const catalog = await client.getCatalog(board, fanoutHeaders);
     const cliResponse = cli.getCLIFromCatalog(catalog, page);
     res.send(cliResponse);
   } catch (error) {

@@ -36,7 +36,8 @@ func init() {
 
 // GetCatalog retrieves the catalog of a supported SFW board.
 // The 'board' parameter specifies the board to get the catalog of (e.g., "po" for Papercraft & Origami).
-func GetCatalog(board string) ([]CatalogPage, error) {
+// The 'headers' parameter specifies any optional headers to be sent in the request.
+func GetCatalog(board string, headers map[string]string) ([]CatalogPage, error) {
 
 	// Check if the board is in the sfwSupportedBoardsArray
 	isSupported := false
@@ -53,6 +54,7 @@ func GetCatalog(board string) ([]CatalogPage, error) {
 	// Call the 4channel API to get the catalog
 	catalogResponse := []CatalogPage{}
 	_, err := restyClient.R().
+		SetHeaders(headers).
 		SetResult(&catalogResponse).
 		Get(host + "/" + board + "/catalog.json")
 	if err != nil {

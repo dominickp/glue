@@ -33,7 +33,9 @@ def index():
 @app.route("/<string:name>/<int:page>")
 def list_threads(name, page=1):
     chan = ChanClient()
-    catalog = chan.get_catalog(name)
+    # Forward along the x-forwarded-for header so the 4channel API knows the original IP of the user
+    headers = {"x-forwarded-for": request.headers.get("x-forwarded-for", request.remote_addr)}
+    catalog = chan.get_catalog(name, headers)
     response = Response(get_cli_from_chan_catalog(catalog, page))
     response.mimetype = "text/plain"
     return response

@@ -11,9 +11,10 @@ class ChanClient {
   /**
    * Get the catalog of a supported SFW board.
    * @param {string} board - The board to get the catalog of (e.g. "po" for Papercraft & Origami).
+   * @param {Object} headers - Optional headers to include in the request.
    * @returns {Promise} - A promise that resolves with the catalog
    */
-  async getCatalog(board) {
+  async getCatalog(board, headers = {}) {
     if (!board) {
       throw new Error("Board is required.");
     }
@@ -24,6 +25,7 @@ class ChanClient {
     const response = await fetch(url, {
       method: "GET",
       timeout: REQUEST_TIMEOUT,
+      headers: headers,
     });
     if (!response.ok) {
       throw new Error(`Failed to fetch catalog for board ${board}.`);

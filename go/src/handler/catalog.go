@@ -44,7 +44,12 @@ func HandleCatalog(c *gin.Context) {
 		c.String(http.StatusBadRequest, "Invalid page number.")
 	}
 
-	catalog, err := client.GetCatalog(name)
+	// Forward along the x-forwarded-for header so the 4channel API knows the original IP of the user
+	headers := map[string]string{
+		"x-forwarded-for": c.ClientIP(),
+	}
+
+	catalog, err := client.GetCatalog(name, headers)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
