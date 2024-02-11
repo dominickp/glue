@@ -69,8 +69,6 @@ def test_get_threads_curl_page_3(host):
  - Vestibulum faucibus semper lacus a sagittis. Suspendisse egestas... (10 replies)
 """
 
-# add test to confirm /po/1 as the same as /po
-
 @pytest.mark.parametrize("host", GLUE_IMPLEMENTATIONS)
 def test_get_threads_curl_page_4(host):
     """
