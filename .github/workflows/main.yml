@@ -32,10 +32,10 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-go
     - name: Build and push Docker image (go)
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
       with:
         context: ./go
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/arm64
         push: true
         tags: ${{ steps.meta-go.outputs.tags }}
         labels: ${{ steps.meta-go.outputs.labels }}
@@ -49,7 +49,7 @@ jobs:
       uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
       with:
         context: ./python
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/arm64
         push: true
         tags: ${{ steps.meta-py.outputs.tags }}
         labels: ${{ steps.meta-py.outputs.labels }}
@@ -63,7 +63,7 @@ jobs:
       uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
       with:
         context: ./javascript
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/arm64
         push: true
         tags: ${{ steps.meta-js.outputs.tags }}
         labels: ${{ steps.meta-js.outputs.labels }}
