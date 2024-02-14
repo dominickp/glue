@@ -13,6 +13,12 @@ info:
 
 
 servers:
+  - url: https://glue-js.dominick.cc
+    description: Python implementation (hosted)
+  - url: https://glue-go.dominick.cc
+    description: Golang implementation (hosted)
+  - url: https://glue-js.dominick.cc
+    description: Javascript implementation (hosted)
   - url: http://localhost:8001
     description: Python implementation
   - url: http://localhost:8002

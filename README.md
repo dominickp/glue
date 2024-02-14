@@ -27,10 +27,15 @@ Page 5:
 
 ## Table of contents <!-- omit in toc -->
 - [Purpose](#purpose)
-- [Todo](#todo)
+- [What's done vs a work in progress](#whats-done-vs-a-work-in-progress)
 - [Deployment](#deployment)
-- [Functional testing](#functional-testing)
-- [Local example](#local-example)
+  - [Observability](#observability)
+- [Testing](#testing)
+  - [Unit testing](#unit-testing)
+  - [Functional testing](#functional-testing)
+- [Performance testing](#performance-testing)
+- [Local development and use](#local-development-and-use)
+- [API Documentation](#api-documentation)
 
 
 ## Purpose
@@ -54,13 +59,8 @@ But what this application actually does is not the really point. Most of the cod
 - document a project and an API
 - use CICD and deploy this app somewhere
 
-## Todo
- - Improve logging, code quality
- - Prometheus metrics and grafana dashboard
- - Unit tests
- - Performance tests
- - API monitoring
- - Improve this readme and document what is happening here so people don't need to dig into the code to understand
+## What's done vs a work in progress
+I still plan to do a few things to this project. This table shows what's available now.
 
 |Requirements/Features|Python<br>Implementation|Go<br>Implementation|Javascript<br>Implementation|
 |---|---|---|---|
@@ -69,11 +69,12 @@ But what this application actually does is not the really point. Most of the cod
 |HTML response for non-curl users|☑️|☑️|☑️|
 |Timeouts for fanout|☑️|☑️|☑️|
 |Functional tests (passing)|☑️|☑️|☑️|
+|Unit tests (passing)|🔲|🔲|🔲|
+|Performance tests (passing)|🔲|🔲|🔲|
 |Cloud deployment|☑️|☑️|☑️|
 |CORS headers for swagger-ui|☑️|☑️|☑️|
-|Prometheus metrics|☑️|🔲|🔲|
-|Unit tests (passing)|🔲|🔲|🔲|
-|API monitoring|🔲|🔲|🔲|
+|Prometheus metrics|☑️|☑️|☑️|
+|API monitoring|☑️|☑️|☑️|
 
 ## Deployment
 I have an instance of each implementation deployed to my Oracle Cloud Infrastructure (OCI) tenancy. 
@@ -84,34 +85,87 @@ curl https://glue-py.dominick.cc/po/2   # python
 curl https://glue-js.dominick.cc/mu     # javascript
 ```
 
+
 For those curious, this repo using GitHub Actions to publish [packages](https://github.com/dominickp?tab=packages&repo_name=glue) (the docker images of the applications) to GitHub Container Registry (GHCR) with tag `main` (named after the branch). I'm deploying containers in OCI with [Portainer](https://www.portainer.io/) which pulls prebuilt images from GHCR. I also have a [Watchtower](https://containrrr.dev/watchtower/) container which scans for updates the images in GHCR at the `main` tag, and if detected, will automatically pull and re-deploy the containers. 
 
 <img src="./docs/img/glue-deployment.drawio.png">
 
 Another alternative would be to have GitHub Actions deploy to Portainer directly, which would give me a much more normal CICD pipeline. I didn't do this because currently my Portainer instance is only accessible via my [Tailscale](https://tailscale.com/) network and I'd have to expose it to the Internet to allow GitHub Actions access it. But I'm sure I could whitelist GitHub to access it with network policies.
 
-## Functional testing
+### Observability
+See [./docs/observability.md](./docs/observability.md).
+
+## Testing
+### Unit testing
+_Not yet implemented._
+### Functional testing
 This repo includes mock and live functional testing. Some people would instead use these terms: integration testing, API testing, component testing. Regardless, these are external tests of the API via HTTP requests. These types of tests are nice for a project like this because we can write one test and use it on all of the existing implementations (or future ones if I add more languages) since they should provide the exact same API. 
+
+You can run the mock functional tests like this:
+```sh
+docker-compose up --build mock-functional-test
+```
 
 <img src="./docs/img/glue-functional-testing.drawio.png">
 
 The live-functional-tests just do some very basic checks to ensure the live containers are appropriately configured for their dependencies. 
 
-The majority of the logic is tested in the mock-functional-test, where we control everything that the fanout is doing. For example, we can mock out a specific set of data to be returned and write our tests against it. We won't have to worry about data changing in the live dependency that breaks out tests.
+You can run the live functional tests like this:
+```sh
+docker-compose up --build live-functional-test
+```
 
-Furthermore, we can inject some faults into the system to see how our application reacts when encountering problems. The way I've done it here is to use (abuse?) the "X-Forwarded-For" (XFF) header, which is forwarded to the dependency so they can see the originating IP (sometimes this is required to support rate limiting when proxies are involved). I've configured my "mock-4channel" application to delay its response when it sees the XFF signal `4c-mock-delay=N` with "N" being the number of seconds to delay. This means, the person writing mock-functional-tests can just alter the XFF being sent into the application which allows them easily test the timeout logic.
+The majority of the logic is tested in the `mock-functional-test`, where we control everything that the fanout is doing. For example, we can mock out a specific set of data to be returned and write our tests against it. We won't have to worry about data changing in the live dependency that breaks out tests.
 
-## Local example
+Furthermore, we can inject some faults into the system to see how our application reacts when encountering problems. The way I've done it here is to use (abuse?) the `X-Forwarded-For` (XFF) header, which is forwarded to the dependency so they can see the originating IP (sometimes this is required to support rate limiting when proxies are involved). I've configured my "mock-4channel" application to delay its response when it sees the XFF signal `4c-mock-delay=N` with "N" being the number of seconds to delay. This means, the person writing mock-functional-tests can just alter the XFF being sent into the application which allows them easily test the timeout logic.
+
+## Performance testing
+_Not yet implemented._
+
+## Local development and use
 
 ```sh
-# Start the container(s) locally
+# Start the live container(s) locally
 docker-compose up --build live-python       # python
 docker-compose up --build live-go           # go
 docker-compose up --build live-javascript   # javascript
+
+# Start the mock container(s) locally
+docker-compose up --build mocked-python       # python
+docker-compose up --build mocked-go           # go
+docker-compose up --build mocked-javascript   # javascript
+
+# You can start everything like this if you don't want to specify them individually
+docker-compose up --build
 ```
+You will notice that after running these (or the `mocked-` versions), that any time you make a code change to the application source code, the process will reload. In the case of Go, we make use of [CompileDaemon](https://github.com/githubnemo/CompileDaemon) to also recompile the program when changes are detected. 
+
+This means that each of these containers defined in [./docker-compose.yml](./docker-compose.yml) are also a defined development environment that supports "developing on-container". Setting up projects this way allows teams to work with multiple different languages, versions of languages, and runtimes. You don't have to worry about the version of Go or Node installed on your development machine -- the only real dependency is Docker and docker-compose. Additionally, this means that what you're running as you develop is extremely similar to what you're shipping (both are containers built the same way).
+
 ```sh
 # View page 2 of Papercraft & Origami (/po/)
-curl http://localhost:8001/po/2             # python
-curl http://localhost:8002/po/2             # go
-curl http://localhost:8003/po/2             # javascript
+curl http://localhost:8001/po/2             # live-python
+curl http://localhost:8002/po/2             # live-go
+curl http://localhost:8003/po/2             # live-javascript
+# Refer to the port configuration in ./docker-compose.yml
 ```
+
+## API Documentation
+This application defines a simple plaintext API (but also has some errors in HTML in cases where the user accesses via the browser). This is defined in [the included OpenAPI spec](./schema/swagger.yml).
+
+You can run the included `swagger-ui` to see the API docs:
+
+```sh
+docker-compose up swagger-ui
+```
+
+Then navigate to [http://localhost:9001/](http://localhost:9001/) to view it.
+
+I've configured the following sets of servers in swagger-ui:
+- deployed services
+- local mocked containers
+- local live container
+
+Here is a screenshot of it in action:
+
+<img src="./docs/img/swagger-ui.png">
