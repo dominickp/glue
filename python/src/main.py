@@ -44,6 +44,7 @@ def after_request(response):
     total_time_ms = (time() - g.start) * 1000
     # Get the normalized route like "/<string:name>/<int:page>" if url_rule is present
     normalized_path = request.url_rule.rule if request.url_rule else "unmatched-route"
+    normalized_path = normalized_path.replace("<string:name>", ":name").replace("<int:page>", ":page")
     # Ensure unmatched routes are recorded as "not_found"
     METRIC_TOTAL_REQUEST_TIME.labels(request.method, normalized_path, response.status_code).observe(total_time_ms)
     return response
