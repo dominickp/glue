@@ -41,11 +41,11 @@ def after_request(response):
     Capture the time spent on the request and record it as a metric.
     """
     # Calculate the total time spent on the request
-    total_time = time() - g.start
+    total_time_ms = (time() - g.start) * 1000
     # Get the normalized route like "/<string:name>/<int:page>" if url_rule is present
     normalized_path = request.url_rule.rule if request.url_rule else "unmatched-route"
     # Ensure unmatched routes are recorded as "not_found"
-    METRIC_TOTAL_REQUEST_TIME.labels(request.method, normalized_path, response.status_code).observe(total_time)
+    METRIC_TOTAL_REQUEST_TIME.labels(request.method, normalized_path, response.status_code).observe(total_time_ms)
     return response
 
 @app.route("/")

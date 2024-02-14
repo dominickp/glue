@@ -24,8 +24,8 @@ class ChanClient:
         """
         start = time()
         chan_r = requests.request(method, url, timeout=REQUEST_TIMEOUT, headers=headers)
-        total_time = time() - start
-        METRIC_FANOUT_REQUEST_TIME.labels(method, url, chan_r.status_code).observe(total_time)
+        total_time_ms = (time() - start) * 1000
+        METRIC_FANOUT_REQUEST_TIME.labels(method, url, chan_r.status_code).observe(total_time_ms)
         return chan_r
 
     def get_catalog(self, board, headers={}):
