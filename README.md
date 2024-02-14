@@ -72,6 +72,7 @@ I still plan to do a few things to this project. This table shows what's availab
 |Unit tests (passing)|🔲|🔲|🔲|
 |Performance tests (passing)|🔲|🔲|🔲|
 |Cloud deployment|☑️|☑️|☑️|
+|CICD to build/push Docker image|☑️|☑️|☑️|
 |CORS headers for swagger-ui|☑️|☑️|☑️|
 |Prometheus metrics|☑️|☑️|☑️|
 |API monitoring|☑️|☑️|☑️|
