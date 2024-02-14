@@ -70,6 +70,7 @@ But what this application actually does is not the really point. Most of the cod
 |Timeouts for fanout|☑️|☑️|☑️|
 |Functional tests (passing)|☑️|☑️|☑️|
 |Cloud deployment|☑️|☑️|☑️|
+|CORS headers for swagger-ui|☑️|☑️|☑️|
 |Prometheus metrics|☑️|🔲|🔲|
 |Unit tests (passing)|🔲|🔲|🔲|
 |API monitoring|🔲|🔲|🔲|
