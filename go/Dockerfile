@@ -11,6 +11,8 @@ RUN go get github.com/githubnemo/CompileDaemon
 RUN go install github.com/githubnemo/CompileDaemon
 
 FROM alpine:latest
+# Add curl for healthchecks
+RUN apk add curl
 # Copy the binary from the builder
 COPY --from=builder /app/service .
 ENTRYPOINT [ "./service" ]
