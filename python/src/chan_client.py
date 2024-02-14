@@ -3,7 +3,7 @@ import requests
 import logging
 from time import time
 from furl import furl
-from metrics import METRIC_FANOUT_REQUEST_TIME
+from metrics import METRIC_FANOUT_REQUEST_TIME, METRIC_CHAN_BOARDS_REQUESTED
 
 REQUEST_TIMEOUT = 5
 DEFAULT_CHAN_HOST = "https://a.4cdn.org"
@@ -38,6 +38,9 @@ class ChanClient:
             raise ValueError("Board cannot be empty.")
         if board not in SFW_4CHAN_BOARDS:
             raise ValueError(f"Board {board} is not a supported SFW board.")
+        
+        # Capture the 4channel board metric now that we know the value is of a small set.
+        METRIC_CHAN_BOARDS_REQUESTED.labels(board).inc()
         
         # Example: https://a.4cdn.org/po/catalog.json
         url = furl(CHAN_HOST).add(path=[board, "catalog.json"]).url
