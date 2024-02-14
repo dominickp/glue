@@ -86,7 +86,6 @@ curl https://glue-py.dominick.cc/po/2   # python
 curl https://glue-js.dominick.cc/mu     # javascript
 ```
 
-
 For those curious, this repo using GitHub Actions to publish [packages](https://github.com/dominickp?tab=packages&repo_name=glue) (the docker images of the applications) to GitHub Container Registry (GHCR) with tag `main` (named after the branch). I'm deploying containers in OCI with [Portainer](https://www.portainer.io/) which pulls prebuilt images from GHCR. I also have a [Watchtower](https://containrrr.dev/watchtower/) container which scans for updates the images in GHCR at the `main` tag, and if detected, will automatically pull and re-deploy the containers. 
 
 <img src="./docs/img/glue-deployment.drawio.png">
@@ -119,6 +118,8 @@ docker-compose up --build live-functional-test
 The majority of the logic is tested in the `mock-functional-test`, where we control everything that the fanout is doing. For example, we can mock out a specific set of data to be returned and write our tests against it. We won't have to worry about data changing in the live dependency that breaks out tests.
 
 Furthermore, we can inject some faults into the system to see how our application reacts when encountering problems. The way I've done it here is to use (abuse?) the `X-Forwarded-For` (XFF) header, which is forwarded to the dependency so they can see the originating IP (sometimes this is required to support rate limiting when proxies are involved). I've configured my "mock-4channel" application to delay its response when it sees the XFF signal `4c-mock-delay=N` with "N" being the number of seconds to delay. This means, the person writing mock-functional-tests can just alter the XFF being sent into the application which allows them easily test the timeout logic.
+
+These tests are also setup to run locally with [pytest-watch](https://pypi.org/project/pytest-watch/). When pytest-watch detects test code changes, it will automatically re-run the tests to reduce test iteration time.
 
 ## Performance testing
 _Not yet implemented._
