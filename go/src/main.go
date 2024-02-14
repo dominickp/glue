@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/dominickp/glue/go/src/handler"
+	"github.com/dominickp/glue/go/src/metrics"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -16,13 +18,31 @@ func corsMiddleware() gin.HandlerFunc {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "*")
-
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
 			return
 		}
-
 		c.Next()
+	}
+}
+
+// metricsMiddleware captures the request time and the response code in Prometheus metrics.
+func metricsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
+		c.Next()
+		elapsed := time.Since(start)
+		// Get the normalized route like "/user/:id" 
+		normalizedPath := c.FullPath()
+		if normalizedPath == "" {
+			normalizedPath = "not_found"
+		}
+		// Capture the request time in milliseconds
+		metrics.MetricTotalRequestTime.WithLabelValues(
+			c.Request.Method,
+			normalizedPath, 
+			fmt.Sprintf("%d", c.Writer.Status()),
+		).Observe(float64(elapsed.Milliseconds()))
 	}
 }
 
@@ -53,6 +73,7 @@ func main() {
 	r := gin.Default()
 	r.Use(corsMiddleware())
 	r.Use(validateCurlRequestMiddleware())
+	r.Use(metricsMiddleware())
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "You should call /<board>/<page> to get the catalog of a board.\n")
 	})
