@@ -7,6 +7,7 @@ import (
 
 	"github.com/dominickp/glue/go/src/handler"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // https://techwasti.com/cors-handling-in-go-gin-framework
@@ -29,7 +30,7 @@ func corsMiddleware() gin.HandlerFunc {
 // If the request is not made using curl, it returns a HTML response with an error message.
 func validateCurlRequestMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if !strings.HasPrefix(c.GetHeader("User-Agent"), "curl") {
+		if c.Request.URL.Path != "/metrics" && !strings.HasPrefix(c.GetHeader("User-Agent"), "curl") {
 			requestURL := c.Request.Host + c.Request.URL.String() // "localhost:8002/"
 			c.Data(http.StatusBadRequest, "text/html; charset=utf-8",
 				[]byte(fmt.Sprintf(`
@@ -48,12 +49,14 @@ func validateCurlRequestMiddleware() gin.HandlerFunc {
 }
 
 func main() {
+
 	r := gin.Default()
 	r.Use(corsMiddleware())
 	r.Use(validateCurlRequestMiddleware())
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "You should call /<board>/<page> to get the catalog of a board.\n")
 	})
+	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 	r.GET("/:name", handler.HandleCatalog)
 	r.GET("/:name/:page", handler.HandleCatalog)
 	r.GET("/ping", func(c *gin.Context) {
