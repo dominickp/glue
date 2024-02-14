@@ -34,7 +34,7 @@ var (
 
 	MetricChanBoardsRequested = promauto.NewCounterVec(
         prometheus.CounterOpts{
-            Name: "chan_boards_requested",
+            Name: "chan_boards_requested_total",
             Help: "Number of times a 4channel board was requested",
 			ConstLabels: map[string]string{"app": "glue-go"},
         },
