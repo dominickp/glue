@@ -62,6 +62,17 @@ But what this application actually does is not the really point. Most of the cod
  - API monitoring
  - Improve this readme and document what is happening here so people don't need to dig into the code to understand
 
+|Feature|Python<br>Implementation|Go<br>Implementation|Javascript<br>Implementation|
+|---|---|---|---|
+|Get boards API|☑️|☑️|☑️|
+|Access logs|☑️|☑️|☑️|
+|HTML response for non-curl users|☑️|☑️|☑️|
+|Timeouts for fanout|☑️|☑️|☑️|
+|Functional tests (passing)|☑️|☑️|☑️|
+|Prometheus metrics|☑️|🔲|🔲|
+|Unit tests (passing)|🔲|🔲|🔲|
+|  |  |  |  |
+
 ## Deployment
 I have an instance of each implementation deployed to my Oracle Cloud Infrastructure (OCI) tenancy. 
 
