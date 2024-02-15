@@ -43,7 +43,11 @@ mock-performance-test-1  | 21:19:44 INFO: Initiating data feeding...
 mock-performance-test-1  | 21:19:45 INFO: Started data feeding: https://a.blazemeter.com/app/?public-token=UN81on78FhUAxSoy8XF2FA1Qzglsk1x0kCeujtrb0GIXvOziqT#reports/r-ext-65ce7fe708759686401114/summary
 ```
 
-Clicking on that link (the exact one above will likely be dead by the time you read this), I can watch the results of the test as it's underway. The included mock functional test runs against the "mocked" versions of each implementation and lasts about 7 minutes. This is roughly what it does:
+Clicking on that link (the exact one above will likely be dead by the time you read this), I can watch the results of the test as it's underway. Here's an example the report looks like for a running test:
+
+<img src="./img/perf_blazemeter_report.png">
+
+The included mock functional test runs against the "mocked" versions of each implementation and lasts about 7 minutes. This is roughly what it does:
 
 1. 1 minute positive case targeting `mocked-python`
 1. 1 minute positive case targeting `mocked-go`
@@ -67,7 +71,20 @@ So why is Python so bad? Well, I'm using the Flask development server to serve i
 
 So to improve this, I'd serve it with something like Gunicorn and likely use a multiprocessing setup with gevent workers.
 
-You might also notice in the table above that
+You might also notice in the table above that there are more samples (completed requests) that occured with Go. The performance tests employ a "virtual user" for concurrency which in our case is just a loop of the defined requests. Go was able to complete each request faster so it could move on to the next request sooner and got more work done in the same amount of time.
+
+The engine health tab shows us some interesting data as well:
+
+<img src="./img/perf_engine.png">
+
+In the fault case, the number of connections held open increases as the number if virtual users is higher for this test case (I raised it because each request is so slow).
+
+During the second half of the positive Python test case, the CPU spikes very high as the web server stops making connections which causes requests to end extremely quickly (which  results in a very rapid increase in the number of requests).
+
+You can see the actual error that JMeter reported here:
+
+<img src="./img/perf_errors.png">
+
 
 ## Local development and use
 
