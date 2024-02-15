@@ -93,7 +93,7 @@ Another alternative would be to have GitHub Actions deploy to Portainer directly
 See [./docs/observability.md](./docs/observability.md).
 
 ## Testing
-See [./docs/testing.md](./docs/testing.md)
+See [./docs/testing.md](./docs/testing.md).
 
 ## Local development and use
 
