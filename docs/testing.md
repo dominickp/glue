@@ -58,7 +58,7 @@ The included mock functional test runs against the "mocked" versions of each imp
 1. 1 minute positive case targeting `mocked-go`
 1. 1 minute positive case targeting `mocked-js`
 
-This pattern of running best-case scenarios surrounging fault cases (a "💩🥪" if you will) can sometimes catch resource problems. Such as if memory usage increases during the dependency slowdown (which is expected) but is not released when the slowdown resolves (which would be bad).
+This pattern of running best-case scenarios surrounding a fault case (a "💩🥪" if you will) can sometimes catch resource problems. Such as if memory usage increases during the dependency slowdown (which is expected) but is not released when the slowdown resolves (which would be bad).
 
 ### Results and takeaways
 
