@@ -89,7 +89,11 @@ services:
     healthcheck:
       <<: *shared-curl-heathcheck
     volumes: [./docker/mock-4channel:/app]
-    ports: [8051:80]
+    # To bind a host port for this service, comment out the deploy block first
+    # ports: [8051:80]
+    deploy:
+      mode: replicated
+      replicas: 3  # Scale to 3 replicas so the dependency doesn't bottleneck the performance test
     command: nodemon --legacy-watch src/index.js
 
   swagger-ui:
@@ -134,3 +138,13 @@ services:
     command: ptw --poll -- -vv ./live
     environment:
       GLUE_IMPLEMENTATIONS_CSV: "http://live-python,http://live-go,http://live-javascript"
+
+  mock-performance-test:
+    build: ./tests/performance
+    volumes: [./tests/performance/src:/bzt-configs]
+    init: true
+    tty: true
+    depends_on:
+      mocked-python: {condition: service_healthy}
+      mocked-go: {condition: service_healthy}
+      mocked-javascript: {condition: service_healthy}

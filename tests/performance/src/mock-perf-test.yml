@@ -1,0 +1,58 @@
+execution:
+  # Positive best case scenarios
+  - {concurrency: 5, ramp-up: 30s, hold-for: 30s, scenario: mocked-python-positive}
+  - {concurrency: 5, ramp-up: 30s, hold-for: 30s, scenario: mocked-go-positive}
+  - {concurrency: 5, ramp-up: 30s, hold-for: 30s, scenario: mocked-js-positive}
+  # Severe slowdowns on dependency that slows down requests
+  - {concurrency: 100, ramp-up: 30s, hold-for: 30s, scenario: mocked-all-timeout-negative}
+  # Run the positive cases again, after the negative case to see how things recover
+  - {concurrency: 5, ramp-up: 30s, hold-for: 30s, scenario: mocked-python-positive}
+  - {concurrency: 5, ramp-up: 30s, hold-for: 30s, scenario: mocked-go-positive}
+  - {concurrency: 5, ramp-up: 30s, hold-for: 30s, scenario: mocked-js-positive}
+
+scenarios:
+  mocked-python-positive:
+    variables:
+      host: http://mocked-python
+    headers: {User-Agent: curl/7.64.1}
+    requests:
+      - url: ${host}/
+      - url: ${host}/po
+      - url: ${host}/po/1
+      - url: ${host}/po/2
+      - url: ${host}/po/3
+  mocked-go-positive:
+    variables:
+      host: http://mocked-go
+    headers: {User-Agent: curl/7.64.1}
+    requests:
+      - url: ${host}/
+      - url: ${host}/po
+      - url: ${host}/po/1
+      - url: ${host}/po/2
+      - url: ${host}/po/3
+  mocked-js-positive:
+    variables:
+      host: http://mocked-javascript
+    headers: {User-Agent: curl/7.64.1}
+    requests:
+      - url: ${host}/
+      - url: ${host}/po
+      - url: ${host}/po/1
+      - url: ${host}/po/2
+      - url: ${host}/po/3
+  mocked-all-timeout-negative:
+    variables:
+      py-host: http://mocked-python
+      go-host: http://mocked-go
+      js-host: http://mocked-javascript
+    headers: {User-Agent: curl/7.64.1, X-Forwarded-For: 4c-mock-delay=4} # Delay all requests by 4 seconds
+    requests:
+      - url: ${py-host}/po/1
+      - url: ${go-host}/po/1
+      - url: ${js-host}/po/1
+
+
+modules:
+  local:
+    sequential: true
