@@ -1,7 +1,7 @@
-## Testing
-### Unit testing
+# Testing
+## Unit testing
 _Not yet implemented._
-### Functional testing
+## Functional testing
 This repo includes mock and live functional testing. Some people would instead use these terms: integration testing, API testing, component testing. Regardless, these are external tests of the API via HTTP requests. These types of tests are nice for a project like this because we can write one test and use it on all of the existing implementations (or future ones if I add more languages) since they should provide the exact same API. 
 
 You can run the mock functional tests like this:
