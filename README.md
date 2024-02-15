@@ -31,6 +31,7 @@ Page 5:
 - [Deployment](#deployment)
   - [Observability](#observability)
 - [Testing](#testing)
+- [Local development and use](#local-development-and-use)
 - [API Documentation](#api-documentation)
 
 
@@ -94,6 +95,34 @@ See [./docs/observability.md](./docs/observability.md).
 ## Testing
 See [./docs/testing.md](./docs/testing.md)
 
+## Local development and use
+
+```sh
+# Start the live container(s) locally
+docker-compose up --build live-python       # python
+docker-compose up --build live-go           # go
+docker-compose up --build live-javascript   # javascript
+
+# Start the mock container(s) locally
+docker-compose up --build mocked-python       # python
+docker-compose up --build mocked-go           # go
+docker-compose up --build mocked-javascript   # javascript
+
+# You can start everything like this if you don't want to specify them individually
+docker-compose up --build
+```
+You will notice that after running these (or the `mocked-` versions), that any time you make a code change to the application source code, the process will reload. In the case of Go, we make use of [CompileDaemon](https://github.com/githubnemo/CompileDaemon) to also recompile the program when changes are detected. 
+
+This means that each of these containers defined in [./docker-compose.yml](./docker-compose.yml) are also a defined development environment that supports "developing on-container". Setting up projects this way allows teams to work with multiple different languages, versions of languages, and runtimes. You don't have to worry about the version of Go or Node installed on your development machine -- the only real dependency is Docker and docker-compose. Additionally, this means that what you're running as you develop is extremely similar to what you're shipping (both are containers built the same way).
+
+```sh
+# View page 2 of Papercraft & Origami (/po/)
+curl http://localhost:8001/po/2             # live-python
+curl http://localhost:8002/po/2             # live-go
+curl http://localhost:8003/po/2             # live-javascript
+# Refer to the port configuration in ./docker-compose.yml
+```
+
 ## API Documentation
 This application defines a simple plaintext API (but also has some errors in HTML in cases where the user accesses via the browser). This is defined in [the included OpenAPI spec](./schema/swagger.yml).
 
@@ -113,3 +142,4 @@ I've configured the following sets of servers in swagger-ui:
 Here is a screenshot of it in action:
 
 <img src="./docs/img/swagger-ui.png">
+

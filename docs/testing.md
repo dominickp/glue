@@ -77,39 +77,10 @@ The engine health tab shows us some interesting data as well:
 
 <img src="./img/perf_engine.png">
 
-In the fault case, the number of connections held open increases as the number if virtual users is higher for this test case (I raised it because each request is so slow).
+In the fault case, the number of connections held open increases as the number of virtual users is higher for this test case (I raised it because each request is so slow).
 
 During the second half of the positive Python test case, the CPU spikes very high as the web server stops making connections which causes requests to end extremely quickly (which  results in a very rapid increase in the number of requests).
 
 You can see the actual error that JMeter reported here:
 
 <img src="./img/perf_errors.png">
-
-
-## Local development and use
-
-```sh
-# Start the live container(s) locally
-docker-compose up --build live-python       # python
-docker-compose up --build live-go           # go
-docker-compose up --build live-javascript   # javascript
-
-# Start the mock container(s) locally
-docker-compose up --build mocked-python       # python
-docker-compose up --build mocked-go           # go
-docker-compose up --build mocked-javascript   # javascript
-
-# You can start everything like this if you don't want to specify them individually
-docker-compose up --build
-```
-You will notice that after running these (or the `mocked-` versions), that any time you make a code change to the application source code, the process will reload. In the case of Go, we make use of [CompileDaemon](https://github.com/githubnemo/CompileDaemon) to also recompile the program when changes are detected. 
-
-This means that each of these containers defined in [./docker-compose.yml](./docker-compose.yml) are also a defined development environment that supports "developing on-container". Setting up projects this way allows teams to work with multiple different languages, versions of languages, and runtimes. You don't have to worry about the version of Go or Node installed on your development machine -- the only real dependency is Docker and docker-compose. Additionally, this means that what you're running as you develop is extremely similar to what you're shipping (both are containers built the same way).
-
-```sh
-# View page 2 of Papercraft & Origami (/po/)
-curl http://localhost:8001/po/2             # live-python
-curl http://localhost:8002/po/2             # live-go
-curl http://localhost:8003/po/2             # live-javascript
-# Refer to the port configuration in ./docker-compose.yml
-```
