@@ -9,7 +9,7 @@ You can run the mock functional tests like this:
 docker-compose up --build mock-functional-test
 ```
 
-<img src="./docs/img/glue-functional-testing.drawio.png">
+<img src="./img/glue-functional-testing.drawio.png">
 
 The live-functional-tests just do some very basic checks to ensure the live containers are appropriately configured for their dependencies. 
 
