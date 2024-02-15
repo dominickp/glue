@@ -64,9 +64,9 @@ I still plan to do a few things to this project. This table shows what's availab
 |Access logs|☑️|☑️|☑️|
 |HTML response for non-curl users|☑️|☑️|☑️|
 |Timeouts for fanout|☑️|☑️|☑️|
-|Functional tests (passing)|☑️|☑️|☑️|
-|Unit tests (passing)|🔲|🔲|🔲|
-|Performance tests (passing)|🔲|🔲|🔲|
+|Functional tests |☑️|☑️|☑️|
+|Unit tests |🔲|🔲|🔲|
+|Performance tests |☑️|☑️|☑️|
 |Cloud deployment|☑️|☑️|☑️|
 |CICD to build/push Docker image|☑️|☑️|☑️|
 |CORS headers for swagger-ui|☑️|☑️|☑️|
