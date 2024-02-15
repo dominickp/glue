@@ -31,10 +31,6 @@ Page 5:
 - [Deployment](#deployment)
   - [Observability](#observability)
 - [Testing](#testing)
-  - [Unit testing](#unit-testing)
-  - [Functional testing](#functional-testing)
-- [Performance testing](#performance-testing)
-- [Local development and use](#local-development-and-use)
 - [API Documentation](#api-documentation)
 
 
@@ -96,61 +92,7 @@ Another alternative would be to have GitHub Actions deploy to Portainer directly
 See [./docs/observability.md](./docs/observability.md).
 
 ## Testing
-### Unit testing
-_Not yet implemented._
-### Functional testing
-This repo includes mock and live functional testing. Some people would instead use these terms: integration testing, API testing, component testing. Regardless, these are external tests of the API via HTTP requests. These types of tests are nice for a project like this because we can write one test and use it on all of the existing implementations (or future ones if I add more languages) since they should provide the exact same API. 
-
-You can run the mock functional tests like this:
-```sh
-docker-compose up --build mock-functional-test
-```
-
-<img src="./docs/img/glue-functional-testing.drawio.png">
-
-The live-functional-tests just do some very basic checks to ensure the live containers are appropriately configured for their dependencies. 
-
-You can run the live functional tests like this:
-```sh
-docker-compose up --build live-functional-test
-```
-
-The majority of the logic is tested in the `mock-functional-test`, where we control everything that the fanout is doing. For example, we can mock out a specific set of data to be returned and write our tests against it. We won't have to worry about data changing in the live dependency that breaks out tests.
-
-Furthermore, we can inject some faults into the system to see how our application reacts when encountering problems. The way I've done it here is to use (abuse?) the `X-Forwarded-For` (XFF) header, which is forwarded to the dependency so they can see the originating IP (sometimes this is required to support rate limiting when proxies are involved). I've configured my "mock-4channel" application to delay its response when it sees the XFF signal `4c-mock-delay=N` with "N" being the number of seconds to delay. This means, the person writing mock-functional-tests can just alter the XFF being sent into the application which allows them easily test the timeout logic.
-
-These tests are also setup to run locally with [pytest-watch](https://pypi.org/project/pytest-watch/). When pytest-watch detects test code changes, it will automatically re-run the tests to reduce test iteration time.
-
-## Performance testing
-_Not yet implemented._
-
-## Local development and use
-
-```sh
-# Start the live container(s) locally
-docker-compose up --build live-python       # python
-docker-compose up --build live-go           # go
-docker-compose up --build live-javascript   # javascript
-
-# Start the mock container(s) locally
-docker-compose up --build mocked-python       # python
-docker-compose up --build mocked-go           # go
-docker-compose up --build mocked-javascript   # javascript
-
-# You can start everything like this if you don't want to specify them individually
-docker-compose up --build
-```
-You will notice that after running these (or the `mocked-` versions), that any time you make a code change to the application source code, the process will reload. In the case of Go, we make use of [CompileDaemon](https://github.com/githubnemo/CompileDaemon) to also recompile the program when changes are detected. 
-
-This means that each of these containers defined in [./docker-compose.yml](./docker-compose.yml) are also a defined development environment that supports "developing on-container". Setting up projects this way allows teams to work with multiple different languages, versions of languages, and runtimes. You don't have to worry about the version of Go or Node installed on your development machine -- the only real dependency is Docker and docker-compose. Additionally, this means that what you're running as you develop is extremely similar to what you're shipping (both are containers built the same way).
-
-```sh
-# View page 2 of Papercraft & Origami (/po/)
-curl http://localhost:8001/po/2             # live-python
-curl http://localhost:8002/po/2             # live-go
-curl http://localhost:8003/po/2             # live-javascript
-# Refer to the port configuration in ./docker-compose.yml
-```
+See [./docs/testing.md](./docs/testing.md)
 
 ## API Documentation
 This application defines a simple plaintext API (but also has some errors in HTML in cases where the user accesses via the browser). This is defined in [the included OpenAPI spec](./schema/swagger.yml).
