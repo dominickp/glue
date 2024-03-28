@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM arm64v8/python:3.12-slim
 
 RUN mkdir /app
 WORKDIR /app
