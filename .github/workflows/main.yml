@@ -3,6 +3,9 @@ name: Docker Image CI
 on:
   push:
     branches: [ "main", "test" ]
+    # don't trigger if just updating docs
+    paths-ignore:
+      - "**.md"
   pull_request:
     branches: [ "main", "test" ]
 
@@ -36,6 +39,7 @@ jobs:
       with:
         context: ./go
         push: true
+        platforms: linux/arm64
         tags: ${{ steps.meta-go.outputs.tags }}
         labels: ${{ steps.meta-go.outputs.labels }}
     # Python image
@@ -49,6 +53,7 @@ jobs:
       with:
         context: ./python
         push: true
+        platforms: linux/arm64
         tags: ${{ steps.meta-py.outputs.tags }}
         labels: ${{ steps.meta-py.outputs.labels }}
     # Javascript image
@@ -62,6 +67,7 @@ jobs:
       with:
         context: ./javascript
         push: true
+        platforms: linux/arm64
         tags: ${{ steps.meta-js.outputs.tags }}
         labels: ${{ steps.meta-js.outputs.labels }}
 
